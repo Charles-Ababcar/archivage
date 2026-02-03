@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGetBanquesQuery } from '../../api/banqueApi';
 import { Table } from '../../components/ui/Table';
 import { Loader } from '../../components/ui/Loader';
-import { Landmark, CreditCard } from 'lucide-react';
+import { Landmark, CreditCard, Eye } from 'lucide-react';
+import BanqueDetails from './BanqueDetails';
 
 const BanqueList: React.FC = () => {
   const { data: banques, isLoading, isError } = useGetBanquesQuery();
 
-
+const [selectedBanqueId, setSelectedBanqueId] = useState<number | null>(null);
 
 
  console.log("Nombre de banques reçues :", banques?.length);
@@ -17,6 +18,12 @@ const BanqueList: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      {selectedBanqueId && (
+        <BanqueDetails 
+          banqueId={selectedBanqueId} 
+          onClose={() => setSelectedBanqueId(null)} 
+        />
+      )}
       <Table headers={['Nom de la Banque', 'RIB / Identifiant', 'Actions']}>
         {banques?.map((banque) => (
           <tr key={banque.id} className="hover:bg-slate-50 transition-colors">
@@ -34,9 +41,12 @@ const BanqueList: React.FC = () => {
                 {banque.rib}
               </div>
             </td>
-            <td className="p-4">
-              <button className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline">
-                Voir transactions
+          <td className="p-4">
+              <button 
+                onClick={() => setSelectedBanqueId(banque.id)}
+                className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-sm font-bold hover:bg-blue-100 transition-colors"
+              >
+                <Eye size={16} /> Voir transactions
               </button>
             </td>
           </tr>

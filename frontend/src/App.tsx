@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MainLayout from './components/MainLayout';
 import { TabId } from './components/Sidebar';
 
-// 1. Import du Dashboard
+// Imports des fonctionnalités
 import Dashboard from './features/dashboard/Dashboard'; 
 import BanqueForm from './features/banques/BanqueForm';
 import BanqueList from './features/banques/BanqueList'; 
@@ -10,18 +10,24 @@ import TransactionForm from './features/transactions/TransactionForm';
 import TransactionTable from './features/transactions/TransactionTable';
 import SearchTransactions from './features/transactions/SearchFilters';
 
+// 1. Nouveaux imports à créer
+import LevelingForm from './features/transactions/LevelingForm';
+import ExtractionPage from './features/transactions/ExtractionPage';
+
 const App: React.FC = () => {
-  // Optionnel : Tu peux changer 'ADD_BANK' par 'DASHBOARD' pour qu'il soit la page d'accueil
+  // Page par défaut sur le Dashboard
   const [activeTab, setActiveTab] = useState<TabId>('DASHBOARD');
 
-  // 2. Mise à jour des titres (Assure-toi que DASHBOARD est dans ton type TabId)
+  // 2. Mise à jour des titres selon le cahier des charges (Point 3)
   const titles: Record<TabId, string> = {
-    DASHBOARD: 'Tableau de Bord Financier',
-    ADD_BANK: 'Créer une nouvelle Banque',
-    ADD_TRANS: 'Archiver une Transaction',
-    BANKS: 'Liste des Banques',
-    TRANSACTIONS: 'Historique des Opérations',
-    SEARCH: 'Recherche Avancée'
+    DASHBOARD: 'Menu Principal - Tableau de Bord',
+    ADD_BANK: 'Paramétrage - Ajouter une Banque',
+    ADD_TRANS: 'Saisie - Nouvelle Transaction Externe',
+    LEVELING: 'Saisie - Nivellement Bancaire (Interne)',
+    BANKS: 'Consultation - Liste des Banques',
+    TRANSACTIONS: 'Archivage - Toutes les Transactions',
+    SEARCH: 'Module de Recherche par Montant',
+    EXTRACTION: 'Reporting - Extraction des Données (Excel)'
   };
 
   return (
@@ -30,10 +36,10 @@ const App: React.FC = () => {
       onTabChange={setActiveTab} 
       title={titles[activeTab]}
     >
-      {/* Switch de contenu */}
-      <div className="bg-white rounded-xl shadow-sm border p-6">
+      {/* Conteneur principal avec style Fintech */}
+      <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 p-8 min-h-[600px]">
         
-        {/* 3. Ajout de la condition pour le Dashboard */}
+        {/* Affichage conditionnel des composants */}
         {activeTab === 'DASHBOARD' && <Dashboard />}
         
         {activeTab === 'ADD_BANK' && <BanqueForm />}
@@ -41,10 +47,16 @@ const App: React.FC = () => {
         {activeTab === 'BANKS' && <BanqueList />} 
         
         {activeTab === 'ADD_TRANS' && <TransactionForm />}
+
+        {/* 3. Nouveau : Formulaire de Nivellement (Règle 4.2 c) */}
+        {activeTab === 'LEVELING' && <LevelingForm />}
         
         {activeTab === 'TRANSACTIONS' && <TransactionTable />} 
         
         {activeTab === 'SEARCH' && <SearchTransactions />}
+
+        {/* 4. Nouveau : Page d'extraction Excel (Règle 4.6) */}
+        {activeTab === 'EXTRACTION' && <ExtractionPage />}
       </div>
     </MainLayout>
   );

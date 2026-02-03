@@ -7,17 +7,34 @@ class Banque(Base):
     id = Column(Integer, primary_key=True, index=True)
     rib = Column(String, unique=True, index=True, nullable=False)
     nom_banque = Column(String, nullable=False)
-    transactions = relationship("Transaction", back_populates="banque")
+    
+    # Relation vers les transactions
+    transactions = relationship("Transaction", back_populates="banque", cascade="all, delete-orphan")
 
 class Transaction(Base):
     __tablename__ = "transactions"
     id = Column(Integer, primary_key=True, index=True)
-    type = Column(String)  # 'Entrée' ou 'Sortie'
+    
+    # Champs de base
+    type = Column(String, nullable=False)      # 'Entrée' ou 'Sortie'
+    nature = Column(String, default="Externe") # 'Externe' ou 'Interne' (Nivellement)
     date_trans = Column(Date, nullable=False)
     libelle = Column(String, nullable=False)
     montant = Column(Float, nullable=False)
-    tiers = Column(String)  # Provenance ou Destination
+    
+    # Tiers (Provenance pour Entrée, Destination pour Sortie)
+    tiers = Column(String) 
+    
+    # Pièce justificative
     pdf_path = Column(String)
+    
+    # Suivi des soldes (Règle 4.6)
+    solde_initial = Column(Float, default=0.0)
+    solde_final = Column(Float, default=0.0)
+    
+    # Identifiant de groupe pour le nivellement (Règle 4.2 c)
+    leveling_id = Column(String, nullable=True, index=True) 
+    
+    # Relations
     banque_id = Column(Integer, ForeignKey("banques.id"))
-    # RELATION CRUCIALE : permet d'accéder à transaction.banque.nom_banque
     banque = relationship("Banque", back_populates="transactions")

@@ -7,11 +7,13 @@ import {
   LayoutDashboard,
   Building,
   BarChart3,
-  LucideIcon // Import du type pour TypeScript
+  LucideIcon, // Import du type pour TypeScript
+  ArrowLeftRight,
+  FileSpreadsheet
 } from 'lucide-react';
 
 // Définition rigoureuse des types d'onglets
-export type TabId = 'DASHBOARD' | 'ADD_BANK' | 'ADD_TRANS' | 'BANKS' | 'TRANSACTIONS' | 'SEARCH';
+export type TabId = 'DASHBOARD' | 'ADD_BANK' | 'ADD_TRANS' | 'LEVELING' | 'BANKS' | 'TRANSACTIONS' | 'SEARCH' | 'EXTRACTION';
 
 interface SidebarProps {
   activeTab: TabId;
@@ -57,7 +59,18 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange }) => {
       label: 'Transactions', 
       icon: History, 
       description: 'Historique complet'
-    },
+    },{ 
+  id: 'LEVELING', 
+  label: 'Nivellement', 
+  icon: ArrowLeftRight, // Importe ArrowLeftRight de lucide-react
+  description: 'Transfert entre banques'
+},
+{ 
+  id: 'EXTRACTION', 
+  label: 'Extraction', 
+  icon: FileSpreadsheet, // Importe FileSpreadsheet de lucide-react
+  description: 'Rapports Excel'
+},
     { 
       id: 'SEARCH', 
       label: 'Recherche', 
